@@ -51,12 +51,12 @@ static double solid_angle(const Vector3d &a,
   T omega = 2.0 * at;
   return omega;
 }
-
+/** /
 extern "C" {
   void tet_linear_jac_(double *jac, const double *x, const double *Dm, const double *vol, const double *lam, const double *miu);
   void tet_linear_hes_(double *hes, const double *x, const double *Dm, const double *vol, const double *lam, const double *miu);  
 }
-
+/**/
 struct tet_fem
 {
   mati_t tets_;
@@ -77,7 +77,7 @@ struct tet_fem
       Dm_.col(i) = Dm.inverse().reshaped();
     }
   }
-
+/** /
   VectorXd Gra(const matd_t &x, const double nu) {
     lam_ = 2*nu/(1-2*nu);
 
@@ -109,6 +109,7 @@ struct tet_fem
     HES.setFromTriplets(trips.begin(), trips.end());
     return HES;
   }
+  /**/
 };
 
 //===============================================================================
@@ -601,7 +602,8 @@ void somig_deformer_3::deform(matd_t             &V,
       spdlog::info("No embedding tets for this model!");
       return;
     }
-    
+    return;
+    /** /
     // displace tet nodes
     Matrix3Xd tetV = tetV0_;
     tetV.leftCols(cageV_.cols()) = cageV_;
@@ -646,6 +648,7 @@ void somig_deformer_3::deform(matd_t             &V,
     V.bottomRows(nv) = V_.transpose();
 
     return;
+    /**/
   }
   
   if ( typeDf == MEANVALUE ) {

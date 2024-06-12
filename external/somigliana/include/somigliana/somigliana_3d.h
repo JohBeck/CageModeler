@@ -8,7 +8,12 @@
 #include <Eigen/Sparse>
 
 #include "types.h"
+#ifdef SOMIG_WITH_CUDA
 #include "cuda_impl.h"
+#else
+#include "cpu_impl.h"
+#endif // WITH_CUDA
+
 #include "trig_quad_rule.h"
 
 namespace green {
