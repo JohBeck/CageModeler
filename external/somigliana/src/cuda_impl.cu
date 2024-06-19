@@ -1,6 +1,6 @@
 
-#include "cuda_impl.h"
-#include "cuda_impl.inl"
+#include "../include/somigliana/cuda_impl.h"
+#include "../include/somigliana/cuda_impl.inl"
 
 #include <Eigen/Dense>
 

@@ -39,11 +39,10 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/external/LBC" LBCLib)
 add_subdirectory("${CMAKE_SOURCE_DIR}/external/libigl" libIGL)
 add_subdirectory("${CMAKE_SOURCE_DIR}/external/OpenFBX" OpenFBXLib)
 
-# TODO: Working here
 option(SOMIG_WITH_CUDA "" OFF)
 
 # On Linux we want to enable Somigliana only if we have CUDA.
-if (UNIX)
+if (UNIX) # UNIX
     include(CheckLanguage)
     option(SOMIG_WITH_CUDA "" ON)
 
@@ -68,9 +67,9 @@ if (UNIX)
     endif()
 endif()
 
-#add_compile_definitions(WITH_SOMIGLIANA)
-#set(ENABLE_SOMIGLIANA true)
-#add_subdirectory("${CMAKE_SOURCE_DIR}/external/somigliana" SomiglianaLib)
+add_compile_definitions(WITH_SOMIGLIANA)
+set(ENABLE_SOMIGLIANA true)
+add_subdirectory("${CMAKE_SOURCE_DIR}/external/somigliana" SomiglianaLib)
 
 # Include directories of the external dependencies.
 set(IGL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/external/libigl/include")

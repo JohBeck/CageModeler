@@ -1,7 +1,7 @@
 
 
-#include "somigliana/cpu_impl.h"
-#include "somigliana/cuda_impl.inl"
+#include "../include/somigliana/cpu_impl.h"
+#include "../include/somigliana/cuda_impl.inl"
 
 #include <Eigen/Dense>
 
@@ -70,7 +70,7 @@ extern "C" {
                 d_qp,
                 d_qw,
                 nq,
-                idx, // thread_index,
+                //idx, // thread_index,
                 idx / ncf, // index,
                 idx % ncf // f
                 );
@@ -117,7 +117,7 @@ extern "C" {
                 d_qp,
                 d_qw,
                 nq,
-                idx, // thread_index,
+                //idx, // thread_index,
                 idx / ncf, // index,
                 idx % ncf // f
                 );

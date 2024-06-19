@@ -17,24 +17,33 @@ if(SOMIG_WITH_CUDA)
 	set_target_properties(cuda_green PROPERTIES
 		CUDA_SEPARABLE_COMPILATION ON
 		CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
+	target_compile_definitions(cuda_green PUBLIC SOMIG_WITH_CUDA)
+
 else()
-	add_library(cuda_green STATIC src/cpu_impl.cc)
+	add_library(cuda_green STATIC src/cpu_impl.cc)  
 endif(SOMIG_WITH_CUDA)
 
 
 # CUDA runtime libs
 if(SOMIG_WITH_CUDA)
-find_package(CUDAToolkit REQUIRED)
-# TODO: Set the Flag automatically!
+	find_package(CUDAToolkit REQUIRED)
+	# TODO: Set the Flag automatically!
+
+	set_target_properties(cuda_green PROPERTIES CUDA_ARCHITECTURES "50;72")
+
+	target_link_libraries(cuda_green
+		CUDA::cudart
+		Eigen3::Eigen
+		CGAL::CGAL
+	)
+	else()
+	target_link_libraries(cuda_green
+		Eigen3::Eigen
+		CGAL::CGAL
+	)
 endif()
 
-set_target_properties(cuda_green PROPERTIES CUDA_ARCHITECTURES "50;72")
-
-target_link_libraries(cuda_green
-	CUDA::cudart
-	Eigen3::Eigen
-	CGAL::CGAL
-)
 
 set(${PROJECT_NAME}_HEADERS
 	include/somigliana/catch.hpp
@@ -57,6 +66,7 @@ set(${PROJECT_NAME}_HEADERS
 if(SOMIG_WITH_CUDA)
 	list(APPEND ${PROJECT_NAME}_HEADERS
 		include/somigliana/cuda_impl.h
+	)
 	
 else()
 	list(APPEND ${PROJECT_NAME}_HEADERS

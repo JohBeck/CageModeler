@@ -8,6 +8,8 @@
 #include <Eigen/Sparse>
 
 #include "types.h"
+#include <spdlog/spdlog.h>
+
 #ifdef SOMIG_WITH_CUDA
 #include "cuda_impl.h"
 #else

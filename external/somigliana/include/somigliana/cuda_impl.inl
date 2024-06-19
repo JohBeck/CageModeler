@@ -117,7 +117,7 @@ void green_kernel(scalar_t *d_phix,
                              const scalar_t *d_qp,
                              const scalar_t *d_qw,
                              const index_t nq,
-                             const unsigned int thread_index,
+                             //const unsigned int thread_index,
                              const unsigned int index,
                              const unsigned int f) {
   // unsigned int thread_index = blockIdx.x*blockDim.x + threadIdx.x;
@@ -207,7 +207,7 @@ __host__ __device__
                              const scalar_t *d_qp,
                              const scalar_t *d_qw,
                              const index_t nq,
-                             const unsigned int thread_index,
+                             //const unsigned int thread_index,
                              const unsigned int index,
                              const unsigned int f)  {
   // unsigned int thread_index = blockIdx.x*blockDim.x + threadIdx.x;
