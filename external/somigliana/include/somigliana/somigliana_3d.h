@@ -16,6 +16,8 @@
 #include "cpu_impl.h"
 #endif // WITH_CUDA
 
+//#include "green_core.h"
+
 #include "trig_quad_rule.h"
 
 namespace green {
@@ -153,7 +155,7 @@ class somig_deformer_3
   std::shared_ptr<trig_integrator> trig_it_;
 
   // cuda precomputer
-  std::shared_ptr<cuda_cage_precomputer> cu_prec;
+  std::shared_ptr<cage_precomputer> cage_prec;
 };
 
 }

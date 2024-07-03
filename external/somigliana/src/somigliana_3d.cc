@@ -245,7 +245,7 @@ void somig_deformer_3::init(const size_t num_quadrature) {
     const MatrixXf h_cageV = cageV0_.cast<float>();
     const MatrixXf h_cageN = cageN0_.cast<float>();
     const MatrixXf h_V     = V0_.cast<float>();
-    cu_prec = std::make_shared<cuda_cage_precomputer>
+    cage_prec = std::make_shared<cage_precomputer>
         (cageF_.cols(), cageV_.cols(), V_.cols(),
          h_cageF.data(), h_cageV.data(), h_cageN.data(), h_V.data());
 
@@ -254,7 +254,7 @@ void somig_deformer_3::init(const size_t num_quadrature) {
     VectorXf  h_qw = trig_it_->qw_.cast<float>();
     spdlog::info("total quadrature number={}", h_qw.size());
     spdlog::info("sum of qw={}", h_qw.sum());
-    cu_prec->copy_quadrature_to_device(h_qw.size(), h_qp.data(), h_qw.data());
+    cage_prec->copy_quadrature_to_device(h_qw.size(), h_qp.data(), h_qw.data());
   }
 
   // initial solid angle
@@ -452,7 +452,7 @@ void somig_deformer_3::precompute_somig_coords() {
   MatrixXf h_PSI = MatrixXf::Zero(3*nv, 3*ncf);
   MatrixXf h_PHI = MatrixXf::Zero(3*nv, 3*ncv);
   clk.start();    
-  cu_prec->precompute_somig_gpu(nu_, h_PHI.data(), h_PSI.data());
+  cage_prec->precompute_somig(nu_, h_PHI.data(), h_PSI.data());
   clk.stop();  
   PHI_ = h_PHI.cast<double>();
   PSI_ = h_PSI.cast<double>();

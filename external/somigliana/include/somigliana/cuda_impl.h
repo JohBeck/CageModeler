@@ -69,10 +69,10 @@ extern "C" {
   
 }
 
-class cuda_cage_precomputer
+class cage_precomputer
 {
  public:
-  ~cuda_cage_precomputer() {
+  ~cage_precomputer() {
     // mesh and points
     cudaFree(d_cageF_);
     cudaFree(d_cageV_);
@@ -100,7 +100,7 @@ class cuda_cage_precomputer
     cudaFree(d_PSI_);
     cudaFree(d_PHI_);
   }  
-  cuda_cage_precomputer(const index_t ncf,
+  cage_precomputer(const index_t ncf,
                         const index_t ncv,
                         const index_t nv,
                         const index_t  *h_cageF,
@@ -180,7 +180,7 @@ class cuda_cage_precomputer
   //   cudaMemcpy(h_psi, d_psi_, ncf_*nv_*sizeof(scalar_t), cudaMemcpyDeviceToHost);
   // }
   
-  void precompute_somig_gpu(const scalar_t nu,
+  void precompute_somig(const scalar_t nu,
                             scalar_t *h_PHI,
                             scalar_t *h_PSI) {
     cudaMemset(d_PHI_,  0, 9*ncv_*nv_*sizeof(scalar_t));

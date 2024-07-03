@@ -1,5 +1,3 @@
-
-
 #include "../include/somigliana/cpu_impl.h"
 #include "../include/somigliana/cuda_impl.inl"
 

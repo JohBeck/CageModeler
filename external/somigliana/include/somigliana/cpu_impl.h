@@ -70,10 +70,10 @@ extern "C" {
   
 }
 
-class cuda_cage_precomputer
+class cage_precomputer
 {
  public:
- ~cuda_cage_precomputer() {
+ ~cage_precomputer() {
   // mesh and points
   delete[] d_cageF_;
   delete[] d_cageV_;
@@ -101,7 +101,7 @@ class cuda_cage_precomputer
   delete[] d_PSI_;
   delete[] d_PHI_;
   }  
-  cuda_cage_precomputer(const index_t ncf,
+  cage_precomputer(const index_t ncf,
                         const index_t ncv,
                         const index_t nv,
                         const index_t  *h_cageF,
@@ -153,7 +153,7 @@ class cuda_cage_precomputer
     std::memcpy(d_qw_, h_qw,   num*sizeof(scalar_t));
     }
 
-  void precompute_somig_gpu(const scalar_t nu,
+  void precompute_somig(const scalar_t nu,
                             scalar_t *h_PHI,
                             scalar_t *h_PSI) {
 
