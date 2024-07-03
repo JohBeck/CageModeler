@@ -12,16 +12,16 @@ find_package(LAPACK REQUIRED)
 
 
 if(SOMIG_WITH_CUDA)
-	add_library(cuda_green STATIC src/cuda_impl.cu)
+	add_library(green_core STATIC src/cuda_impl.cu)
 
-	set_target_properties(cuda_green PROPERTIES
+	set_target_properties(green_core PROPERTIES
 		CUDA_SEPARABLE_COMPILATION ON
 		CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 
-	target_compile_definitions(cuda_green PUBLIC SOMIG_WITH_CUDA)
+	target_compile_definitions(green_core PUBLIC SOMIG_WITH_CUDA)
 
 else()
-	add_library(cuda_green STATIC src/cpu_impl.cc)  
+	add_library(green_core STATIC src/cpu_impl.cc)  
 endif(SOMIG_WITH_CUDA)
 
 
@@ -30,15 +30,15 @@ if(SOMIG_WITH_CUDA)
 	find_package(CUDAToolkit REQUIRED)
 	# TODO: Set the Flag automatically!
 
-	set_target_properties(cuda_green PROPERTIES CUDA_ARCHITECTURES "50;72")
+	set_target_properties(green_core PROPERTIES CUDA_ARCHITECTURES "50;72")
 
-	target_link_libraries(cuda_green
+	target_link_libraries(green_core
 		CUDA::cudart
 		Eigen3::Eigen
 		CGAL::CGAL
 	)
 	else()
-	target_link_libraries(cuda_green
+	target_link_libraries(green_core
 		Eigen3::Eigen
 		CGAL::CGAL
 	)
@@ -90,7 +90,7 @@ target_link_libraries(${PROJECT_NAME}
 	igl::core
 	${Boost_LIBRARIES}
 	${LAPACK_LIBRARIES}
-	cuda_green
+	green_core
 	spdlog::spdlog_header_only
 )
 
