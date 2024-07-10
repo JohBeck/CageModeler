@@ -8,7 +8,6 @@
 #include <Eigen/Sparse>
 
 #include "types.h"
-#include <spdlog/spdlog.h>
 /** /
 #ifdef SOMIG_WITH_CUDA
 #include "cuda_impl.h"
@@ -19,6 +18,8 @@
 #include "green_core.h"
 
 #include "trig_quad_rule.h"
+
+#include <spdlog/spdlog.h>
 
 namespace green {
 

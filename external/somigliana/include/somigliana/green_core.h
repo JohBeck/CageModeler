@@ -6,7 +6,7 @@
 #include "helper_cuda.h"
 #endif // WITH_CUDA
 
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 #include <iostream>
 #include <cstring>
 

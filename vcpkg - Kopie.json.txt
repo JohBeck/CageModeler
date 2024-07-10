@@ -14,7 +14,7 @@
     "lapack",
     "cgal"
   ],
-  "builtin-baseline": "4bee3f5aae7aefbc129ca81c33d6a062b02fcf3b",
+  "builtin-baseline": "57fee154cc4068542740b4b5775343d9fd83413e",
   "overrides": [
     {
       "name": "spdlog",
@@ -42,7 +42,7 @@
     },
     {
       "name": "boost-program-options",
-      "version": "1.84.0"
+      "version": "1.83.0"
     }
   ]
 }

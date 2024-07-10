@@ -46,6 +46,7 @@ else()
 	target_link_libraries(green_core
 		Eigen3::Eigen
 		CGAL::CGAL
+		spdlog::spdlog_header_only
 	)
 endif()
 
