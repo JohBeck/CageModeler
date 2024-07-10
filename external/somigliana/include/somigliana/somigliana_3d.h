@@ -9,14 +9,14 @@
 
 #include "types.h"
 #include <spdlog/spdlog.h>
-
+/** /
 #ifdef SOMIG_WITH_CUDA
 #include "cuda_impl.h"
 #else
 #include "cpu_impl.h"
 #endif // WITH_CUDA
-
-//#include "green_core.h"
+/**/
+#include "green_core.h"
 
 #include "trig_quad_rule.h"
 

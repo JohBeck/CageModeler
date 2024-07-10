@@ -132,7 +132,7 @@ extern "C" {
                       const index_t  *d_cageF,
                       const index_t nv,
                       const index_t ncf);
-}
+//}
 
 void mvc_compute(scalar_t *d_PHI,
                const scalar_t *d_V,
@@ -140,7 +140,8 @@ void mvc_compute(scalar_t *d_PHI,
                const scalar_t *d_cageV,               
                const index_t nv,
                const index_t ncf,
-               const index_t ncv){
+               const index_t ncv);/** /
+               {
 #ifdef SOMIG_WITH_CUDA
   mvc_gpu(d_PHI,
               d_V,
@@ -159,7 +160,7 @@ void mvc_compute(scalar_t *d_PHI,
               ncv);
 #endif
   }
-
+/**/
 void green_compute(scalar_t *d_phix,
                 scalar_t *d_phiy,
                 scalar_t *d_phiz,
@@ -173,40 +174,7 @@ void green_compute(scalar_t *d_phix,
                 const index_t ncv,
                 const scalar_t *d_qp,
                 const scalar_t *d_qw,
-                const index_t nq){
-#ifdef SOMIG_WITH_CUDA
-  green_gpu(d_phix,
-            d_phiy,
-            d_phiz,
-            d_psi,
-            d_V,
-            d_cageF,
-            d_cageV,
-            d_cageN,
-            nv,
-            ncf,
-            ncv,
-            d_qp,
-            d_qw,
-            nq);
-
-#else
-  green_cpu(d_phix,
-            d_phiy,
-            d_phiz,
-            d_psi,
-            d_V,
-            d_cageF,
-            d_cageV,
-            d_cageN,
-            nv,
-            ncf,
-            ncv,
-            d_qp,
-            d_qw,
-            nq);
-#endif
-}
+                const index_t nq);
 
 void green_post(scalar_t *d_phi,
                     const scalar_t *d_phix,
@@ -215,28 +183,8 @@ void green_post(scalar_t *d_phi,
                     const index_t  *d_cageF,
                     const index_t nv,
                     const index_t ncf,
-                    const index_t ncv){
-#ifdef SOMIG_WITH_CUDA
-  green_post_gpu(d_phi,
-                  d_phix,
-                  d_phiy,
-                  d_phiz,
-                  d_cageF,
-                  nv,
-                  ncf,
-                  ncv);  
-#else
-  green_post_cpu(d_phi,
-                  d_phix,
-                  d_phiy,
-                  d_phiz,
-                  d_cageF,
-                  nv,
-                  ncf,
-                  ncv); 
-#endif                                            
-}
-  
+                    const index_t ncv);
+
 void somig_compute(const scalar_t nu,
                 scalar_t *d_PHIx,
                 scalar_t *d_PHIy,
@@ -251,67 +199,15 @@ void somig_compute(const scalar_t nu,
                 const index_t ncv,
                 const scalar_t *d_qp,
                 const scalar_t *d_qw,
-                const index_t nq){
-#ifdef SOMIG_WITH_CUDA
-  somig_gpu(nu,
-            d_PHIx,
-            d_PHIy,
-            d_PHIz,
-            d_PSI ,
-            d_V,
-            d_cageF,
-            d_cageV,
-            d_cageN,
-            nv,
-            ncf,
-            ncv,
-            d_qp,
-            d_qw,
-            nq);   
-#else
-  somig_cpu(nu,
-            d_PHIx,
-            d_PHIy,
-            d_PHIz,
-            d_PSI ,
-            d_V,
-            d_cageF,
-            d_cageV,
-            d_cageN,
-            nv,
-            ncf,
-            ncv,
-            d_qp,
-            d_qw,
-            nq);                  
-#endif // WITH_CUDA
-}
-
+                const index_t nq);
 void somig_post(scalar_t *d_PHI,
                 const scalar_t *d_PHIx,
                 const scalar_t *d_PHIy,
                 const scalar_t *d_PHIz,
                 const index_t  *d_cageF,
                 const index_t nv,
-                const index_t ncf){
-#ifdef SOMIG_WITH_CUDA
-  somig_post_gpu(d_PHI,
-                    d_PHIx,
-                    d_PHIy,
-                    d_PHIz,
-                    d_cageF,
-                    nv,
-                    ncf);
-#else // WITH_CUDA
-  somig_post_cpu(d_PHI,
-                    d_PHIx,
-                    d_PHIy,
-                    d_PHIz,
-                    d_cageF,
-                    nv,
-                    ncf);
-#endif    
-  }
+                const index_t ncf);
+}
 
 // TODO: Fallback to CPU if no CUDA device is found
 class cage_precomputer

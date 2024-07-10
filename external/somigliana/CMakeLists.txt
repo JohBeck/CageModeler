@@ -5,19 +5,24 @@ else()
 	project(green CXX) # CUDA Fortran
 endif(SOMIG_WITH_CUDA)
 
-
 find_package(CGAL REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(LAPACK REQUIRED)
 
-set(green_core_SOURCES src/green_core.cc)
+set(green_core_HEADERS 
+	include/somigliana/green_core.h 
+	include/somigliana/green_core.inl
+	)
+set(green_core_SOURCES 
+	src/green_core.cc
+	)
 
 if(SOMIG_WITH_CUDA)
 	#list(APPEND green_core_SOURCES src/green_core.cu)
 	set(green_core_SOURCES src/green_core.cu)
 endif(SOMIG_WITH_CUDA)	
 	
-add_library(green_core STATIC ${green_core_SOURCES})  
+add_library(green_core STATIC ${green_core_SOURCES} ${green_core_HEADERS})  
 
 if(SOMIG_WITH_CUDA)
 	set_target_properties(green_core PROPERTIES
@@ -60,18 +65,18 @@ set(${PROJECT_NAME}_HEADERS
 	include/somigliana/helper_cuda.h
 	include/somigliana/somigliana_2d.h
 	include/somigliana/somigliana_3d.h
-	#include/somigliana/green_core.h
+	include/somigliana/green_core.h
 )
 
-if(SOMIG_WITH_CUDA)
-	list(APPEND ${PROJECT_NAME}_HEADERS
-		include/somigliana/cuda_impl.h
-	)
-	
-else()
-	list(APPEND ${PROJECT_NAME}_HEADERS
-		include/somigliana/cpu_impl.h)
-endif(SOMIG_WITH_CUDA)
+#if(SOMIG_WITH_CUDA)
+#	list(APPEND ${PROJECT_NAME}_HEADERS
+#		include/somigliana/cuda_impl.h
+#	)
+#	
+#else()
+#	list(APPEND ${PROJECT_NAME}_HEADERS
+#		include/somigliana/cpu_impl.h)
+#endif(SOMIG_WITH_CUDA)
 
 
 set(${PROJECT_NAME}_SOURCES
