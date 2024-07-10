@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	desc.add_options()
 		("help,h", "Help screen")
 		("verbose,v", boost::program_options::value<unsigned int>(&verbosity), "Handle verbosity (0: quiet, 1: verbose, default: 1)")
-		("model,m", boost::program_options::value<std::string>(&inputFile), "Specifies the input *.btet file of the deformation model")
+		("model,m", boost::program_options::value<std::string>(&inputFile), "Specifies the input *.msh or *.obj file of the to-be-deformed model")
 		("cage,c", boost::program_options::value<std::string>(&cageFile), "Specifies the cage to use (Halfface *.hf file for subspaces and obj for others)")
 		("cage-deformed,cd", boost::program_options::value<std::string>(&cageDeformedFile), "Specifies a derformed cage file (instead of a parametrization)")
 		("fbx", boost::program_options::value<std::string>(&fbxFile), "Specifies the .fbx file to be loaded")
@@ -192,7 +192,12 @@ int main(int argc, char** argv)
 #ifdef WITH_SOMIGLIANA
 	if (somigliana || MVC)
 	{
-		if (!somig_deformer->load_mesh(inputFile))
+		if (inputFile.substr(inputFile.size() - 4, 4).compare(".msh") == 0)
+		{
+			somig_deformer->V_ = V_model.transpose();
+			somig_deformer->F_ = T_model;
+		} 
+		else if (!somig_deformer->load_mesh(inputFile))
 		{
 			std::cerr << "Failed to load mesh file\n";
 			return 1;
@@ -319,7 +324,7 @@ int main(int argc, char** argv)
 	}
 
 	auto const suffix_pos = outMeshFile.find(".");
-	const bool write_msh = outMeshFile.substr(suffix_pos + 1, outMeshFile.size()).compare("btet") == 0;
+	const bool write_msh = outMeshFile.substr(suffix_pos + 1, outMeshFile.size()).compare("msh") == 0;
 
 	Eigen::MatrixXd normals;
 	std::vector<double> psi_tri;
@@ -719,6 +724,12 @@ int main(int argc, char** argv)
 
 		if (write_msh)
 		{
+#ifdef WITH_SOMIGLIANA
+		if (somigliana || MVC)
+		{
+			U_model = somig_deformer->V_.transpose();
+		}
+#endif
 			igl::writeMSH(prefix + middle + variant_string + std::string(".msh"), U_model, Eigen::MatrixXi(), T_model, Eigen::MatrixXi(), tet_tags, std::vector<std::string>(),
 				std::vector<Eigen::MatrixXd>(), std::vector<std::string>(), std::vector<Eigen::MatrixXd>(), std::vector<Eigen::MatrixXd>());
 		}
