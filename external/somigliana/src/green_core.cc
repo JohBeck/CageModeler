@@ -181,6 +181,8 @@ extern "C" {
     }    
   
 
+
+// TODO: Remove?
 void mvc_compute(scalar_t *d_PHI,
                const scalar_t *d_V,
                const index_t  *d_cageF,
@@ -298,7 +300,8 @@ void somig_compute(const scalar_t nu,
                 const index_t ncv,
                 const scalar_t *d_qp,
                 const scalar_t *d_qw,
-                const index_t nq){
+                const index_t nq
+                ){
 #ifdef SOMIG_WITH_CUDA
   somig_gpu(nu,
             d_PHIx,
