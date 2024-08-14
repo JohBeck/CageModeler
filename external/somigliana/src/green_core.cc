@@ -53,7 +53,7 @@ extern "C" {
         //      d_qp, d_qw, nq);
 
 #pragma omp parallel for
-        for(index_t idx = 0; idx < nv; ++idx){
+        for(index_t idx = 0; idx < ncf * nv; ++idx){
             green_kernel(d_PHIx,
                 d_PHIy,
                 d_PHIz,
@@ -98,7 +98,7 @@ extern "C" {
         //      d_V, d_cageF, d_cageV, d_cageN, nv, ncf, ncv,
         //      d_qp, d_qw, nq);
 #pragma omp parallel for
-        for(index_t idx = 0; idx < nv; ++idx){
+        for(index_t idx = 0; idx < ncf * nv; ++idx){
             somig_kernel(
                     nu,
                 d_PHIx,

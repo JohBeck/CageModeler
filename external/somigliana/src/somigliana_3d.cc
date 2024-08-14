@@ -159,14 +159,14 @@ int somig_deformer_3::load_cage(const Eigen::MatrixXd & vertices, const Eigen::M
 int somig_deformer_3::load_cage(const string &file) {
   ifstream input(file);
   if ( !input || !(input >> cage_) || cage_.is_empty() ) {
-    spdlog::error("input error: maybe the file is empty or not in *off* format.");
+    //spdlog::error("input error: maybe the file is empty or not in *off* format.");
     return __LINE__;
   }
 
   ASSERT(CGAL::is_triangle_mesh(cage_));
-  spdlog::info("number of cells={}", cage_.number_of_faces());
-  spdlog::info("number of verts={}", cage_.number_of_vertices());
-  spdlog::info("number of edges={}", cage_.number_of_edges());
+  //spdlog::info("number of cells={}", cage_.number_of_faces());
+  //spdlog::info("number of verts={}", cage_.number_of_vertices());
+  //spdlog::info("number of edges={}", cage_.number_of_edges());
 
   // handle to index mapping
   size_t cnt = 0;
@@ -224,7 +224,7 @@ void somig_deformer_3::init(const size_t num_quadrature) {
                                        cageV0_.col(cageF_(1, f)),
                                        cageV0_.col(cageF_(2, f)));
   }
-  spdlog::info("initial volume={}", volumeV0_);
+  //spdlog::info("initial volume={}", volumeV0_);
 
   // sanity check
   const Vector3d glb_bc = cageV0_.rowwise().sum()/cageV0_.cols();
@@ -234,7 +234,7 @@ void somig_deformer_3::init(const size_t num_quadrature) {
     Vector3d loc_bc = cageV0_(Eigen::all, cageF_.col(f).array()).rowwise().sum()/3.0;
     sum_af += cageA0_(f)*cageN0_.col(f).cross(loc_bc-glb_bc);
   }
-  spdlog::info("sanity check sum_lf={}, sum_af={}", sum_lf.norm(), sum_af.norm());
+  //spdlog::info("sanity check sum_lf={}, sum_af={}", sum_lf.norm(), sum_af.norm());
 
   trig_it_ = std::make_shared<trig_integrator>(3*num_quadrature*num_quadrature); // 2D triangular quadrature for purely numerical evaluation
 
@@ -252,8 +252,8 @@ void somig_deformer_3::init(const size_t num_quadrature) {
     // copy quadrature points and weights
     Matrix2Xf h_qp = trig_it_->qxy_.cast<float>();
     VectorXf  h_qw = trig_it_->qw_.cast<float>();
-    spdlog::info("total quadrature number={}", h_qw.size());
-    spdlog::info("sum of qw={}", h_qw.sum());
+    //spdlog::info("total quadrature number={}", h_qw.size());
+    //spdlog::info("sum of qw={}", h_qw.sum());
     cage_prec->copy_quadrature_to_device(h_qw.size(), h_qp.data(), h_qw.data());
   }
 
@@ -286,9 +286,9 @@ void somig_deformer_3::init(const size_t num_quadrature) {
 }
 
 void somig_deformer_3::precompute_mvc_coords() {
-  spdlog::info("precompute MVC");
+  //spdlog::info("precompute MVC");
   const size_t ncv = num_cage_vertices(), nv = num_mesh_vertices(), nf = num_cage_facets();  
-  spdlog::info("ncv={}, nv={}, nf={}", ncv, nv, nf);
+  //spdlog::info("ncv={}, nv={}, nf={}", ncv, nv, nf);
 
   high_resolution_timer clk;
 
@@ -347,7 +347,7 @@ void somig_deformer_3::precompute_mvc_coords() {
   }
   clk.stop();
   runtime = clk.duration()/1000.0;
-  spdlog::info("MVC comp time={}", runtime);
+  //spdlog::info("MVC comp time={}", runtime);
   
   // enforce PoU
   for (size_t j = 0; j < Phi_.cols(); ++j) {
@@ -356,9 +356,9 @@ void somig_deformer_3::precompute_mvc_coords() {
 }
 
 void somig_deformer_3::precompute_green_coords() {
-  spdlog::info("precompute Green");
+  //spdlog::info("precompute Green");
   const size_t ncv = num_cage_vertices(), nv = num_mesh_vertices(), nf = num_cage_facets();
-  spdlog::info("ncv={}, nv={}, nf={}", ncv, nv, nf);
+  //spdlog::info("ncv={}, nv={}, nf={}", ncv, nv, nf);
 
   //  URAGO approach
   typedef double T;
@@ -439,11 +439,11 @@ void somig_deformer_3::precompute_green_coords() {
       max_pou_violation = col_violation;
     }
   }
-  spdlog::info("maximum POU violation={}", max_pou_violation);  
+  //spdlog::info("maximum POU violation={}", max_pou_violation);  
 }
 
 void somig_deformer_3::precompute_somig_coords() {
-  spdlog::info("precompute Somig NM");
+  //spdlog::info("precompute Somig NM");
   const size_t ncv = num_cage_vertices(), nv = num_mesh_vertices(), ncf = num_cage_facets();
 
   high_resolution_timer clk;
@@ -457,7 +457,7 @@ void somig_deformer_3::precompute_somig_coords() {
   PHI_ = h_PHI.cast<double>();
   PSI_ = h_PSI.cast<double>();
   runtime = clk.duration()/1000.0;
-  spdlog::info("SOMIG comp time={}", runtime);
+  //spdlog::info("SOMIG comp time={}", runtime);
   
 #if 1
   double max_PoU_violation = 0;
@@ -471,21 +471,21 @@ void somig_deformer_3::precompute_somig_coords() {
       max_PoU_violation = check_PoU;
     }
   }
-  spdlog::info("full-numerical max POU violation={}", sqrt(max_PoU_violation));
+  //spdlog::info("full-numerical max POU violation={}", sqrt(max_PoU_violation));
 #endif  
 }
 
 void somig_deformer_3::precompute_phong_coords(const std::string &path) {
-  spdlog::info("precompute Phong");
+  //spdlog::info("precompute Phong");
 
   // generate tet based on cageF and cageV0
   if ( tet_mesh_read_from_vtk(path.c_str(), tetV0_, tetF_) ) {
-    spdlog::warn("no tet mesh for Phong deformation");
+    //spdlog::warn("no tet mesh for Phong deformation");
     return;
   }
   
-  spdlog::info("tets={}, nodes={}", tetF_.cols(), tetV0_.cols());
-  spdlog::info("tris={}, nodes={}", cageF_.cols(), cageV0_.cols());
+  //spdlog::info("tets={}, nodes={}", tetF_.cols(), tetV0_.cols());
+  //spdlog::info("tris={}, nodes={}", cageF_.cols(), cageV0_.cols());
   // there might be steiner points inserted
   ASSERT(tetV0_.cols() >= cageV0_.cols());
   ASSERT((tetV0_.leftCols(cageV0_.cols())-cageV0_).norm() < 1e-8*cageV0_.norm());
@@ -604,7 +604,7 @@ void somig_deformer_3::deform(matd_t             &V,
 
   if ( typeDf == PHONG ) {
     if ( phong_.size() == 0 ) {
-      spdlog::info("No embedding tets for this model!");
+      //spdlog::info("No embedding tets for this model!");
       return;
     }
     return;
@@ -827,7 +827,7 @@ void somig_deformer_3::deform(matd_t             &V,
     }
 
     clk.stop();
-    spdlog::info("# editing time={}", clk.duration()/1000.0);
+    //spdlog::info("# editing time={}", clk.duration()/1000.0);
 
     // V.bottomRows(nv).noalias() = V_.transpose();
     return;

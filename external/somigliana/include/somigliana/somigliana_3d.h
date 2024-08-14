@@ -19,7 +19,7 @@
 
 #include "trig_quad_rule.h"
 
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 
 namespace green {
 
@@ -49,13 +49,13 @@ class somig_deformer_3
   somig_deformer_3(bool quiet = false)
       : mu_(1.0), nu_(0.0), runtime(0) {
         if (quiet) {
-          spdlog::set_level(spdlog::level::warn);
+          //spdlog::set_level(spdlog::level::warn);
         }
       }
   somig_deformer_3(const double nu, bool quiet = false)
       : mu_(1.0), nu_(nu), runtime(0) {
         if (quiet) {
-          spdlog::set_level(spdlog::level::warn);
+          //spdlog::set_level(spdlog::level::warn);
         }
       }
 

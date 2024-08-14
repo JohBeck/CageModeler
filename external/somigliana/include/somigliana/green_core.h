@@ -379,7 +379,7 @@ class cage_precomputer
     std::memset(h_PHIy_, 0, 9*ncf_*nv_*sizeof(scalar_t));
     std::memset(h_PHIz_, 0, 9*ncf_*nv_*sizeof(scalar_t));
     
-    somig_cpu(nu, h_PHIx_, h_PHIy_, h_PHIz_, h_PSI_, h_V_, h_cageF_, h_cageV_, h_cageN_, nv_, ncf_, ncv_, d_qp_, d_qw_, nq_);
+    somig_cpu(nu, h_PHIx_, h_PHIy_, h_PHIz_, h_PSI_, h_V_, h_cageF_, h_cageV_, h_cageN_, nv_, ncf_, ncv_, h_qp_, h_qw_, nq_);
     somig_post_cpu(h_PHI_, h_PHIx_, h_PHIy_, h_PHIz_, h_cageF_, nv_, ncf_);
 
     std::memcpy(h_PSI, h_PSI_, 9*ncf_*nv_*sizeof(scalar_t));
