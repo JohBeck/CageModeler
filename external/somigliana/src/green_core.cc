@@ -14,8 +14,6 @@ extern "C" {
                 const index_t ncv) {
         const unsigned int blocksize = 256;
         const unsigned int numBlocks = (nv+blocksize-1)/blocksize;
-        // mvc_kernel<<< numBlocks, blocksize >>>
-        //     (d_PHI, d_V, d_cageF, d_cageV, nv, ncf, ncv);
 
 #pragma omp parallel for
         for(index_t idx = 0; idx < nv; ++idx){
@@ -45,12 +43,6 @@ extern "C" {
                     const scalar_t *d_qw,
                     const index_t nq) {
         // parallel through basis columns
-        // const unsigned int blocksize = 256;
-        // const unsigned int numBlocks = (ncf*nv+blocksize-1)/blocksize;
-        // green_kernel<<< numBlocks, blocksize >>>
-        //     (d_phix, d_phiy, d_phiz, d_psi,
-        //      d_V, d_cageF, d_cageV, d_cageN, nv, ncf, ncv,
-        //      d_qp, d_qw, nq);
 
 #pragma omp parallel for
         for(index_t idx = 0; idx < ncf * nv; ++idx){
@@ -91,12 +83,7 @@ extern "C" {
                     const scalar_t *d_qw,
                     const index_t nq) {
         // parallel through basis entries
-        // const unsigned int blocksize = 256;
-        // const unsigned int numBlocks = (ncf*nv+blocksize-1)/blocksize;
-        // somig_kernel<<< numBlocks, blocksize >>>
-        //     (nu, d_PHIx, d_PHIy, d_PHIz, d_PSI,
-        //      d_V, d_cageF, d_cageV, d_cageN, nv, ncf, ncv,
-        //      d_qp, d_qw, nq);
+        
 #pragma omp parallel for
         for(index_t idx = 0; idx < ncf * nv; ++idx){
             somig_kernel(
@@ -133,10 +120,6 @@ extern "C" {
                         const index_t ncf,
                         const index_t ncv) {
     // parallel through basis columns
-    // const unsigned int blocksize = 256;
-    // const unsigned int numBlocks = (nv+blocksize-1)/blocksize;
-    // green_kernel_post<<< numBlocks, blocksize >>>
-    //     (d_phi, d_phix, d_phiy, d_phiz, d_cageF, nv, ncf, ncv);
 
 #pragma omp parallel for
         for(index_t idx = 0; idx < nv; ++idx){
@@ -162,10 +145,6 @@ extern "C" {
                         const index_t nv,
                         const index_t ncf) {
     // parallel through basis columns
-//     const unsigned int blocksize = 256;
-//     const unsigned int numBlocks = (nv+blocksize-1)/blocksize;
-//     somig_kernel_post<<< numBlocks, blocksize >>>
-//         (d_PHI, d_PHIx, d_PHIy, d_PHIz, d_cageF, nv, ncf);
 
 #pragma omp parallel for
         for(index_t idx = 0; idx < nv; ++idx){
@@ -303,6 +282,7 @@ void somig_compute(const scalar_t nu,
                 const index_t nq
                 ){
 #ifdef SOMIG_WITH_CUDA
+  if(devID >= 0){
   somig_gpu(nu,
             d_PHIx,
             d_PHIy,
@@ -318,8 +298,8 @@ void somig_compute(const scalar_t nu,
             d_qp,
             d_qw,
             nq);   
-#else
-  somig_cpu(nu,
+  }
+#endif // WITH_CUDA  somig_cpu(nu,
             d_PHIx,
             d_PHIy,
             d_PHIz,
@@ -334,7 +314,6 @@ void somig_compute(const scalar_t nu,
             d_qp,
             d_qw,
             nq);                  
-#endif // WITH_CUDA
 }
 
 void somig_post(scalar_t *d_PHI,
@@ -345,14 +324,17 @@ void somig_post(scalar_t *d_PHI,
                 const index_t nv,
                 const index_t ncf){
 #ifdef SOMIG_WITH_CUDA
-  somig_post_gpu(d_PHI,
-                    d_PHIx,
-                    d_PHIy,
-                    d_PHIz,
-                    d_cageF,
-                    nv,
-                    ncf);
-#else // WITH_CUDA
+  if(devID >= 0){
+    somig_post_gpu(d_PHI,
+                      d_PHIx,
+                      d_PHIy,
+                      d_PHIz,
+                      d_cageF,
+                      nv,
+                      ncf);
+    return;
+  }
+#endif // WITH_CUDA
   somig_post_cpu(d_PHI,
                     d_PHIx,
                     d_PHIy,
@@ -360,9 +342,8 @@ void somig_post(scalar_t *d_PHI,
                     d_cageF,
                     nv,
                     ncf);
-#endif    
-  }
+}
 
 
 /**/
-}
+} // END: extern "C"
