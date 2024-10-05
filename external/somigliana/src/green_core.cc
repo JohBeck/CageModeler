@@ -161,7 +161,6 @@ extern "C" {
   
 
 
-// TODO: Remove?
 void mvc_compute(scalar_t *d_PHI,
                const scalar_t *d_V,
                const index_t  *d_cageF,
@@ -170,6 +169,7 @@ void mvc_compute(scalar_t *d_PHI,
                const index_t ncf,
                const index_t ncv){
 #ifdef SOMIG_WITH_CUDA
+    if (devID >= 0) {
   mvc_gpu(d_PHI,
               d_V,
               d_cageF,
@@ -177,7 +177,9 @@ void mvc_compute(scalar_t *d_PHI,
               nv,
               ncf,
               ncv);
-#else
+  return;
+}
+#endif // WITH_CUDA  
   mvc_cpu(d_PHI,
               d_V,
               d_cageF,
@@ -185,7 +187,6 @@ void mvc_compute(scalar_t *d_PHI,
               nv,
               ncf,
               ncv);
-#endif
   }
 
 void green_compute(scalar_t *d_phix,
@@ -203,6 +204,7 @@ void green_compute(scalar_t *d_phix,
                 const scalar_t *d_qw,
                 const index_t nq){
 #ifdef SOMIG_WITH_CUDA
+    if (devID >= 0) {
   green_gpu(d_phix,
             d_phiy,
             d_phiz,
@@ -217,8 +219,9 @@ void green_compute(scalar_t *d_phix,
             d_qp,
             d_qw,
             nq);
-
-#else
+  return;
+}
+#endif // WITH_CUDA  
   green_cpu(d_phix,
             d_phiy,
             d_phiz,
@@ -233,7 +236,6 @@ void green_compute(scalar_t *d_phix,
             d_qp,
             d_qw,
             nq);
-#endif
 }
 
 void green_post(scalar_t *d_phi,
@@ -245,6 +247,7 @@ void green_post(scalar_t *d_phi,
                     const index_t ncf,
                     const index_t ncv){
 #ifdef SOMIG_WITH_CUDA
+    if (devID >= 0) {
   green_post_gpu(d_phi,
                   d_phix,
                   d_phiy,
@@ -252,8 +255,10 @@ void green_post(scalar_t *d_phi,
                   d_cageF,
                   nv,
                   ncf,
-                  ncv);  
-#else
+                  ncv);
+  return;
+}
+#endif // WITH_CUDA  
   green_post_cpu(d_phi,
                   d_phix,
                   d_phiy,
@@ -261,8 +266,7 @@ void green_post(scalar_t *d_phi,
                   d_cageF,
                   nv,
                   ncf,
-                  ncv); 
-#endif                                            
+                  ncv);                                             
 }
   
 void somig_compute(const scalar_t nu,
@@ -298,8 +302,10 @@ void somig_compute(const scalar_t nu,
             d_qp,
             d_qw,
             nq);   
-  }
-#endif // WITH_CUDA  somig_cpu(nu,
+  return;
+}
+#endif // WITH_CUDA  
+  somig_cpu(nu,
             d_PHIx,
             d_PHIy,
             d_PHIz,

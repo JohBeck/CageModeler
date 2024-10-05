@@ -1,5 +1,5 @@
 
-#include "../include/somigliana/green_core.h" //"../include/somigliana/green_core.h"
+#include "../include/somigliana/green_core.h"
 #include "../include/somigliana/green_core.inl"
 
 #include <Eigen/Dense>

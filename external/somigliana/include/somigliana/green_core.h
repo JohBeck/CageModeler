@@ -196,14 +196,13 @@ void somig_post(scalar_t *d_PHI,
                 const index_t ncf);
 }
 
-// TODO: Fallback to CPU if no CUDA device is found
 class cage_precomputer
 {
  public:
  ~cage_precomputer() {
 #ifdef SOMIG_WITH_CUDA
   // Clean local device variables
-
+   
   // mesh and points
   cudaFree(d_cageF_);
   cudaFree(d_cageV_);
