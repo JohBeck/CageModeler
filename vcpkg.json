@@ -14,8 +14,7 @@
     "lapack",
     "cgal"
   ],
-  "builtin-baseline": "4bee3f5aae7aefbc129ca81c33d6a062b02fcf3b",
-
+  "builtin-baseline": "c45ac46dcc16dd588daa029f7ce5bcacc5d7645b",
   "overrides": [
     {
       "name": "spdlog",
