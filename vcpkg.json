@@ -4,7 +4,7 @@
   "dependencies": [
     "spdlog",
     "imgui",
-    "nativefiledialog",
+    "nativefiledialog-extended",
     "glm",
     "volk",
     "openmesh",
@@ -15,6 +15,7 @@
     "cgal"
   ],
   "builtin-baseline": "4bee3f5aae7aefbc129ca81c33d6a062b02fcf3b",
+
   "overrides": [
     {
       "name": "spdlog",
@@ -39,10 +40,6 @@
     {
       "name": "eigen3",
       "version": "3.4.0"
-    },
-    {
-      "name": "boost-program-options",
-      "version": "1.84.0"
     }
   ]
 }
