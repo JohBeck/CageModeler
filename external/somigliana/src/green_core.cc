@@ -350,6 +350,4 @@ void somig_post(scalar_t *d_PHI,
                     ncf);
 }
 
-
-/**/
 } // END: extern "C"

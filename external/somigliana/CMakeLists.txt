@@ -18,8 +18,7 @@ set(green_core_SOURCES
 	)
 
 if(SOMIG_WITH_CUDA)
-	#list(APPEND green_core_SOURCES src/green_core.cu)
-	set(green_core_SOURCES src/green_core.cu)
+	list(APPEND green_core_SOURCES src/green_core.cu)
 endif(SOMIG_WITH_CUDA)	
 	
 add_library(green_core STATIC ${green_core_SOURCES} ${green_core_HEADERS})  
@@ -39,6 +38,7 @@ if(SOMIG_WITH_CUDA)
 		CUDA::cudart
 		Eigen3::Eigen
 		CGAL::CGAL
+		spdlog::spdlog_header_only
 	)
 
 else()
@@ -68,17 +68,6 @@ set(${PROJECT_NAME}_HEADERS
 	include/somigliana/somigliana_3d.h
 	include/somigliana/green_core.h
 )
-
-#if(SOMIG_WITH_CUDA)
-#	list(APPEND ${PROJECT_NAME}_HEADERS
-#		include/somigliana/cuda_impl.h
-#	)
-#	
-#else()
-#	list(APPEND ${PROJECT_NAME}_HEADERS
-#		include/somigliana/cpu_impl.h)
-#endif(SOMIG_WITH_CUDA)
-
 
 set(${PROJECT_NAME}_SOURCES
 	src/io.cc

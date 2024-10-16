@@ -6,7 +6,7 @@
 #include "helper_cuda.h"
 #endif // WITH_CUDA
 
-//#include <spdlog/spdlog.h>
+#include <spdlog/spdlog.h>
 #include <iostream>
 #include <cstring>
 
@@ -23,7 +23,7 @@ extern "C" {
                const index_t nv,
                const index_t ncf,
                const index_t ncv);
-#endif // WITH_CUDA
+#endif // SOMIG_WITH_CUDA
 
   void mvc_cpu(scalar_t *h_PHI,
                const scalar_t *h_V,
@@ -48,7 +48,7 @@ extern "C" {
                  const scalar_t *d_qp,
                  const scalar_t *d_qw,
                  const index_t nq);
-#endif // WITH_CUDA
+#endif // SOMIG_WITH_CUDA
 
   void green_cpu(scalar_t *h_phix,
                  scalar_t *h_phiy,
@@ -74,7 +74,7 @@ extern "C" {
                       const index_t nv,
                       const index_t ncf,
                       const index_t ncv);  
-#endif // WITH_CUDA
+#endif // SOMIG_WITH_CUDA
 
   void green_post_cpu(scalar_t *h_phi,
                       const scalar_t *h_phix,
@@ -101,7 +101,7 @@ extern "C" {
                  const scalar_t *d_qp,
                  const scalar_t *d_qw,
                  const index_t nq);
-#endif // WITH_CUDA
+#endif // SOMIG_WITH_CUDA
 
   void somig_cpu(const scalar_t nu,
                  scalar_t *h_PHIx,
@@ -128,7 +128,7 @@ extern "C" {
                       const index_t  *d_cageF,
                       const index_t nv,
                       const index_t ncf);
-#endif // WITH_CUDA
+#endif // SOMIG_WITH_CUDA
 
   void somig_post_cpu(scalar_t *h_PHI,
                       const scalar_t *h_PHIx,
@@ -213,25 +213,15 @@ class cage_precomputer
   cudaFree(d_qp_);
   cudaFree(d_qw_);
 
-  // // green
-  // cudaFree(d_phix_);
-  // cudaFree(d_phiy_);
-  // cudaFree(d_phiz_);
-  // cudaFree(d_phi_);
-  // cudaFree(d_psi_);
-
-  // // mvc
-  // cudaFree(d_Phi_);
-
   // somigliana
   cudaFree(d_PHIx_); 
   cudaFree(d_PHIy_); 
   cudaFree(d_PHIz_); 
   cudaFree(d_PSI_);
   cudaFree(d_PHI_);
-#else
-  // Clean local host variables
+#endif // SOMIG_WITH_CUDA
 
+  // Clean local host variables
   // mesh and points
   delete[] h_cageF_;
   delete[] h_cageV_;
@@ -248,7 +238,6 @@ class cage_precomputer
   delete[] h_PHIz_; 
   delete[] h_PSI_;
   delete[] h_PHI_;
-#endif // WITH_CUDA
   }  
   
   cage_precomputer(const index_t ncf,
@@ -270,7 +259,10 @@ class cage_precomputer
     //  spdlog::info("device ID={}", devID);
     //}
 
+    // Use GPU if a valid ID is found
     if (devID >= 0) {
+      spdlog::info("device ID={}", devID);
+
       // cage and V
       cudaMalloc((void**)&d_cageF_, 3*ncf*sizeof(index_t));
       cudaMalloc((void**)&d_cageV_, 3*ncv*sizeof(scalar_t));
@@ -283,16 +275,6 @@ class cage_precomputer
       cudaMemcpy(d_cageN_, h_cageN, 3*ncf_*sizeof(scalar_t), cudaMemcpyHostToDevice);
       cudaMemcpy(d_V_,     h_V,     3*nv_ *sizeof(scalar_t), cudaMemcpyHostToDevice);    
 
-      // // basis: green
-      // cudaMalloc((void**)&d_phix_, ncf*nv*sizeof(scalar_t));
-      // cudaMalloc((void**)&d_phiy_, ncf*nv*sizeof(scalar_t));
-      // cudaMalloc((void**)&d_phiz_, ncf*nv*sizeof(scalar_t));        
-      // cudaMalloc((void**)&d_phi_,  ncv*nv*sizeof(scalar_t));
-      // cudaMalloc((void**)&d_psi_,  ncf*nv*sizeof(scalar_t));    
-
-      // // basis: mvc
-      // cudaMalloc((void**)&d_Phi_, ncv*nv*sizeof(scalar_t));
-
       // basis: somigliana
       cudaMalloc((void**)&d_PHIx_, 9*ncf*nv*sizeof(scalar_t)); 
       cudaMalloc((void**)&d_PHIy_, 9*ncf*nv*sizeof(scalar_t)); 
@@ -302,7 +284,8 @@ class cage_precomputer
       return;
     }
 #endif // SOMIG_WITH_CUDA
-
+    
+    spdlog::info("No CUDA Capable devices found");
     // else: Execute on CPU
     // cage and V
     h_cageF_ = new index_t[3*ncf_];
@@ -387,7 +370,7 @@ class cage_precomputer
   }
 
  private:
-  index_t devID = -1; // Only use Cuda if a valid ID is found
+  index_t devID = -1; // Only use Cuda if a valid device is found
   const index_t ncv_, nv_, ncf_;
 
   // cage

@@ -42,10 +42,8 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/external/OpenFBX" OpenFBXLib)
 option(SOMIG_WITH_CUDA "" OFF)
 
 # On Linux we want to enable Somigliana only if we have CUDA.
-if (UNIX) # UNIX
+if (UNIX)
     include(CheckLanguage)
-    option(SOMIG_WITH_CUDA "" ON)
-
     check_language(CUDA)
 
     if (CMAKE_CUDA_COMPILER)
@@ -57,13 +55,10 @@ if (UNIX) # UNIX
         endif()
 
         enable_language(CUDA)
-
-        #add_compile_definitions(WITH_SOMIGLIANA)
-        #set(ENABLE_SOMIGLIANA true)
-
-        #add_subdirectory("${CMAKE_SOURCE_DIR}/external/somigliana" SomiglianaLib)
+        option(SOMIG_WITH_CUDA "" ON)
     else()
         message("No CUDA compiler found.")
+
     endif()
 endif()
 
