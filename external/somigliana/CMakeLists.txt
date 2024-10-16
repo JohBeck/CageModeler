@@ -38,7 +38,6 @@ if(SOMIG_WITH_CUDA)
 		CUDA::cudart
 		Eigen3::Eigen
 		CGAL::CGAL
-		spdlog::spdlog_header_only
 	)
 
 else()
@@ -46,7 +45,6 @@ else()
 	target_link_libraries(green_core
 		Eigen3::Eigen
 		CGAL::CGAL
-		spdlog::spdlog_header_only
 	)
 endif()
 

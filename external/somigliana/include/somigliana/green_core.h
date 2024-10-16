@@ -6,7 +6,6 @@
 #include "helper_cuda.h"
 #endif // WITH_CUDA
 
-#include <spdlog/spdlog.h>
 #include <iostream>
 #include <cstring>
 
@@ -261,7 +260,6 @@ class cage_precomputer
 
     // Use GPU if a valid ID is found
     if (devID >= 0) {
-      spdlog::info("device ID={}", devID);
 
       // cage and V
       cudaMalloc((void**)&d_cageF_, 3*ncf*sizeof(index_t));
@@ -285,7 +283,6 @@ class cage_precomputer
     }
 #endif // SOMIG_WITH_CUDA
     
-    spdlog::info("No CUDA Capable devices found");
     // else: Execute on CPU
     // cage and V
     h_cageF_ = new index_t[3*ncf_];
